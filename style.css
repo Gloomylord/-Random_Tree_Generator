@@ -26,4 +26,9 @@ canvas {
     font-size: 20px;
     overflow: hidden;
     width: 300px;
+    transition: .2s;
+}
+
+.generate-tree-button:hover {
+    transform: translateX(-50%) scale(1.2) ;
 }

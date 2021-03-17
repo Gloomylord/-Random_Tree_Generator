@@ -1,13 +1,15 @@
-const canvas = document.querySelector('canvas');
-const generateButton = document.querySelector('.generate-tree-button');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const ctx = canvas.getContext('2d');
-
+"use strict";
 (function () {
-    const startX = canvas.width / 2, startY = canvas.height - 80;
+    const canvas = document.querySelector('canvas');
+    const generateButton = document.querySelector('.generate-tree-button');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+
+    let startX = canvas.width / 2, startY = canvas.height - 80;
     let curve = 10;
     let curve2 = 10;
+    let blur = true;
     let len = canvas.height / 6, angle = 0,
         branchWidth = 15, color1 = 'brown', color2 = 'orangered';
 
@@ -16,13 +18,12 @@ const ctx = canvas.getContext('2d');
         ctx.save();
         ctx.strokeStyle = color1;
         ctx.fillStyle = color2;
-        ctx.shadowBlur = 5;
+        ctx.shadowBlur = blur ? 5 : 0;
         ctx.shadowColor = 'rgba(0,0,0,.5)';
         ctx.lineWidth = branchWidth;
         ctx.translate(startX, startY);
         ctx.rotate(angle * Math.PI / 180);
         ctx.moveTo(0, 0);
-        //ctx.lineTo(0, -len);
         if (angle > 0) {
             ctx.bezierCurveTo(curve2, -len / 2, curve2, -len / 2, 0, -len)
         } else {
@@ -38,8 +39,9 @@ const ctx = canvas.getContext('2d');
             return
         }
 
-
+        curve = Math.random() * 10 + 10;
         drawTree(0, -len, len * 0.75, angle + curve, branchWidth * .6);
+        curve = Math.random() * 10 + 10;
         drawTree(0, -len, len * 0.75, angle - curve, branchWidth * .6);
 
         ctx.restore();
@@ -62,41 +64,13 @@ const ctx = canvas.getContext('2d');
         drawTree(startX, startY, len, angle, branchWidth, color1, color2);
     }
 
-    // function onMouseDown(e) {
-    //     if (e.target.classList.contains('generate-tree-button')) return;
-    //     document.addEventListener('mousemove', onMouseMove);
-    //     document.addEventListener('mouseup', onMouseUp);
-    //
-    //     function onMouseMove(e) {
-    //         let x = e.pageX;
-    //         let y = e.pageY;
-    //         let radian = Math.atan2(x - canvas.width / 2, canvas.height - 80 - y);
-    //         let deg = radian / Math.PI * 180;
-    //
-    //         if (Math.abs(deg) < 30) {
-    //             angle = radian / Math.PI * 180;
-    //             curve = Math.abs(angle) / 3 + 5;
-    //         } else {
-    //             if(deg > 0) {
-    //                 angle = 30;
-    //             }
-    //             if(deg < 0) {
-    //                 angle = -30;
-    //             }
-    //         }
-    //         if (Math.abs(deg) < 30) {
-    //             ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //             drawTree(startX, startY, len, angle, branchWidth, color1, color2);
-    //         }
-    //     }
-    //
-    //     function onMouseUp(e) {
-    //         document.removeEventListener('mousemove', onMouseMove);
-    //         document.removeEventListener('mouseup', onMouseUp);
-    //     }
-    // }
-    // document.addEventListener('mousedown', onMouseDown);
+    window.addEventListener("resize",()=> {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        startX = canvas.width / 2;
+        startY = canvas.height - 80;
+        drawTree(startX, startY, len, angle, branchWidth, color1, color2);
+    });
 
     generateButton.addEventListener('click', generateRandomTree);
-
 })();
